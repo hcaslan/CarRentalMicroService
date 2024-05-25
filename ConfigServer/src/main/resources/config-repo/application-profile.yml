@@ -1,0 +1,18 @@
+server:
+  port: 3002
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: CarRentalDB
+      username: bilge
+      password: bilge!123
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+redis:
+  host: localhost
+  port: 6379

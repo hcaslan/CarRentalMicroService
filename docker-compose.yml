@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  mongodb:
+    image: 'mongo:latest'
+    environment:
+      - 'MONGO_INITDB_ROOT_USERNAME=root'
+      - 'MONGO_INITDB_ROOT_PASSWORD=example'
+      - 'MONGO_INITDB_DATABASE=demodatabase'
+    ports:
+      - '27017:27017'
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    restart: unless-stopped
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    restart: unless-stopped
+
+  redisinsight:
+    image: 'redislabs/redisinsight:1.14.0'
+    ports:
+      - '8001:8001'
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    restart: unless-stopped
+
+  rabbitmq:
+    image: 'rabbitmq:latest'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    restart: unless-stopped
+

@@ -1,0 +1,5 @@
+dependencies {
+    implementation libs.springCloudGateway
+    implementation libs.springCloudConfigClient
+    implementation libs.springCloudCircuitBreakerReactor
+}

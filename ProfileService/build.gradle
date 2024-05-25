@@ -1,0 +1,10 @@
+dependencies {
+    implementation libs.springBootDataMongo
+    implementation libs.validator
+    implementation libs.springCloudConfigClient
+    implementation libs.springBootAmqp
+    implementation libs.springBootDataRedis
+    implementation libs.jjwtApi
+    runtimeOnly libs.jjwtImpl
+    runtimeOnly libs.jjwtJackson
+}
