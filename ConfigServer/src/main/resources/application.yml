@@ -1,10 +1,15 @@
 server:
   port: 8888
+
 spring:
-  profiles:
-    active: native
+  application:
+    name: config-server-git
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/config-repo
+        git:
+          uri: "https://github.com/hcaslan/CarRentalConfigServer.git"
+          default-label: "main"
+          skip-ssl-validation: true
+          username: ${GIT_NAME}
+          password: ${GIT_TOKEN_JAVA14}
