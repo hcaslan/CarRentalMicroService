@@ -21,4 +21,8 @@ public class FallBackController {
     public ResponseEntity<String> getFallbackMail(){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Mail Service Is Not Responding");
     }
+    @GetMapping("/inventory")
+    public ResponseEntity<String> getFallbackInventory(){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Inventory Service Is Not Responding");
+    }
 }

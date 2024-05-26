@@ -52,6 +52,7 @@ public class AppUser implements UserDetails, Serializable {
 
     @Override
     public String getUsername() {
+        // Using email as the username for authentication
         return email;
     }
 
