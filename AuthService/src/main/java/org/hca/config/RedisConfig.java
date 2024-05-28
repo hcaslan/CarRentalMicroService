@@ -1,5 +1,8 @@
 package org.hca.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.hca.entity.AppUser;
 import org.hca.entity.Token;
@@ -52,20 +55,41 @@ public class RedisConfig {
 //        return redisTemplate;
 //    }
 
+//    @Bean
+//    public RedisTemplate<String, Token> tokenRedisTemplate() {
+//        RedisTemplate<String, Token> redisTemplate = new RedisTemplate<>();
+//        redisTemplate.setConnectionFactory(redisConnectionFactory());
+//
+//        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(jacksonConfig.objectMapper());
+//
+//        redisTemplate.setKeySerializer(new StringRedisSerializer());
+//        redisTemplate.setValueSerializer(serializer);
+//
+//        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+//        redisTemplate.setHashValueSerializer(serializer);
+//
+//        redisTemplate.afterPropertiesSet();
+//        return redisTemplate;
+//    }
+
     @Bean
     public RedisTemplate<String, Token> tokenRedisTemplate() {
-        RedisTemplate<String, Token> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
+        RedisTemplate<String, Token> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
 
-        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(jacksonConfig.objectMapper());
+        ObjectMapper objectMapper = jacksonConfig.objectMapper();
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        objectMapper.registerModule(new JavaTimeModule());
 
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(serializer);
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(serializer);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(serializer);
 
-        template.afterPropertiesSet();
-        return template;
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(serializer);
+
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
     }
 }

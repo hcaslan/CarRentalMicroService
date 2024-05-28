@@ -36,15 +36,18 @@ public class TokenService {
         if (Boolean.FALSE.equals(tokenRedisTemplate.hasKey(KEY)))
         {
             List<Token> allProducts = tokenRepository.findAll();
-            allProducts.forEach(token -> {
-                tokenRedisTemplate.opsForList().rightPush(KEY,token);
-            });
+            if (!allProducts.isEmpty()) {
+                allProducts.forEach(token -> {
+                    tokenRedisTemplate.opsForList().rightPush(KEY, token);
+                });
+            }
         }
     }
     @Transactional
     public String confirmEmailToken(String token) {
+        System.out.println("OKEY1-1");
         Token confirmationToken = findByToken(token);
-
+        System.out.println("OKEY1-2");
         if (confirmationToken.getConfirmedAt() != null) {
             throw new IllegalStateException(mailUtil.buildConfirmedPage("Email already confirmed."));
         }
@@ -90,10 +93,27 @@ public class TokenService {
     public List<Token> getAllCache(){
         return tokenRedisTemplate.opsForList().range(KEY, 0, -1);
     }
-    public Token findById(String id){
-        return getAllCache().stream().filter(token -> token.getId().equals(id)).findFirst().orElseThrow(()-> new AuthServiceException(ErrorType.INVALID_TOKEN));
+
+    public Token findById(String id) {
+        Token token = getAllCache().stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+        if (token == null) {
+            throw new AuthServiceException(ErrorType.INVALID_TOKEN);
+        }
+        return token;
     }
-    public Token findByToken(String token){
-        return getAllCache().stream().filter(oToken -> oToken.getToken().equals(token)).findFirst().orElseThrow(()-> new AuthServiceException(ErrorType.INVALID_TOKEN));
+    public Token findByToken(String token) {
+        System.out.println("OKEY2-1");
+        Token oToken = getAllCache().stream()
+                .filter(t -> t.getToken().equals(token))
+                .findFirst()
+                .orElse(null);
+        System.out.println("OKEY2-2");
+        if (oToken == null) {
+            throw new AuthServiceException(ErrorType.INVALID_TOKEN);
+        }
+        return oToken;
     }
 }

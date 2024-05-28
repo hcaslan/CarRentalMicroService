@@ -3,9 +3,12 @@ package org.hca.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 public class RegistrationRequest {
     @NotNull
     @Size(min = 2, max = 32)

@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class AuthController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+
     @PutMapping(CHANGE_PASSWORD)
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
         return ResponseEntity.ok(appUserService.changePassword(request));

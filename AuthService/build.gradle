@@ -7,6 +7,7 @@ dependencies {
     implementation libs.springBootDataRedis
     implementation libs.jacksonJsr310
     implementation libs.jjwtApi
+    implementation libs.springBootThymeleaf
     runtimeOnly libs.jjwtImpl
     runtimeOnly libs.jjwtJackson
 }
