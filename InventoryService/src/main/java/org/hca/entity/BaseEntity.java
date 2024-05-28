@@ -2,7 +2,6 @@ package org.hca.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hca.entity.enums.Status;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.MongoId;

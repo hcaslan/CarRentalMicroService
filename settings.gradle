@@ -5,4 +5,5 @@ include 'ProfileService'
 include 'MailService'
 include 'GatewayService'
 include 'InventoryService'
+include 'SearchService'
 
