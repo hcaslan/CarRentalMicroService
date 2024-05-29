@@ -7,8 +7,12 @@ public class EndPoints {
     public static final String DEV = "/dev";
     public static final String TEST = "/test";
     public static final String ROOT = API + VERSION;
+    public static final String  REDIRECT= "redirect:";
 
     public static final String AUTH = "/auth";
+    public static final String LOGIN = "/login";
+    public static final String REGISTER = "/register";
+    public static final String CONFIRM = "/confirm";
     public static final String REGISTRATION = "/registration";
     public static final String CONFIRMATION = "/confirmation";
     public static final String AUTHENTICATION = "/authentication";

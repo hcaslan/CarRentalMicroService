@@ -13,32 +13,33 @@
             height: 100vh;
             margin: 0;
         }
-        .login-container {
+        .container {
             background-color: #fff;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             width: 300px;
         }
-        .login-container h2 {
+        .container h2 {
             margin: 0 0 20px;
             text-align: center;
         }
-        .login-container form {
+        .container form {
             display: flex;
             flex-direction: column;
         }
-        .login-container label {
+        .container label {
             margin-bottom: 5px;
         }
-        .login-container input[type="email"],
-        .login-container input[type="password"] {
+        .container input[type="text"],
+        .container input[type="email"],
+        .container input[type="password"] {
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .login-container input[type="submit"] {
+        .container button {
             padding: 10px;
             background-color: #007bff;
             color: #fff;
@@ -46,20 +47,19 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .login-container input[type="submit"]:hover {
+        .container button:hover {
             background-color: #0056b3;
         }
-        .login-container .register-link {
+        .container .link {
             text-align: center;
             margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<div class="login-container">
+<div class="container">
     <h2>Login to Car Rental</h2>
 
-    <!-- Display error message if authentication fails -->
     <div th:if="${param.error}">
         <p style="color: red;">Invalid username or password.</p>
     </div>
@@ -71,9 +71,9 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
-        <input type="submit" value="Login">
+        <button type="submit">Login</button>
     </form>
-    <div class="register-link">
+    <div class="link">
         <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
     </div>
 </div>

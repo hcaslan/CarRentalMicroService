@@ -15,7 +15,6 @@ import org.hca.mapper.CustomCarMapper;
 import org.hca.repository.CarRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,20 +28,13 @@ public class CarService {
     private final RabbitTemplate rabbitTemplate;
 
     public Car save(CarSaveRequest carSaveRequest, FuelType fuelType, GearType gearType, Category category) {
-        Car car = carMapper.dtoToCar(carSaveRequest);
-        car.setFuelType(fuelType);
-        car.setGearType(gearType);
-        car.setCategory(category);
-        CarRabbitMqDto carRabbitMqDto = customCarMapper.carToRabbitMqDto(car);
-        rabbitTemplate.convertAndSend("exchange.direct.carSave","Routing.CarSave",carRabbitMqDto);
+        Car car = customCarMapper.carSaveRequestToCar(carSaveRequest,fuelType,gearType,category);
+        rabbitTemplate.convertAndSend("exchange.direct.carSave","Routing.CarSave",car);
         return carRepository.save(car);
     }
 
     public Car update(CarUpdateRequest carUpdateRequest, FuelType fuelType, GearType gearType, Category category) {
-        Car car = carMapper.dtoToCar(carUpdateRequest);
-        car.setFuelType(fuelType);
-        car.setGearType(gearType);
-        car.setCategory(category);
+        Car car = customCarMapper.carUpdateRequestToCar(carUpdateRequest,fuelType,gearType,category);
         return carRepository.save(car);
     }
 

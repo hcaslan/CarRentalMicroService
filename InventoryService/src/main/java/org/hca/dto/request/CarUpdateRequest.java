@@ -6,6 +6,6 @@ import org.hca.entity.enums.Status;
 
 public record CarUpdateRequest(
 
-        String id, String modelId, int modelYear,
+        String id, String modelId, int modelYear,String image,
         String plate, double dailyPrice) {
 }

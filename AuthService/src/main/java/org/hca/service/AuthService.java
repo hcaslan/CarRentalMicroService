@@ -59,9 +59,7 @@ public class AuthService {
 
         String confirmationLink = "http://localhost:"
                 + environmentProperties.getPort()
-                + ROOT
-                + AUTH
-                + CONFIRMATION
+                + CONFIRM
                 + "?token="
                 + token;
 

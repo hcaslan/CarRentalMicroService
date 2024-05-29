@@ -1,7 +1,5 @@
 package org.hca.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.hca.entity.AppUser;
@@ -19,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -45,26 +44,28 @@ public class TokenService {
     }
     @Transactional
     public String confirmEmailToken(String token) {
-        System.out.println("OKEY1-1");
-        Token confirmationToken = findByToken(token);
-        System.out.println("OKEY1-2");
+        Optional<Token> optionalToken = findByToken(token);
+        if(optionalToken.isEmpty()) {
+            return "Invalid Token";
+        }
+        Token confirmationToken = optionalToken.get();
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException(mailUtil.buildConfirmedPage("Email already confirmed."));
+            return "Email Already Confirmed.";
         }
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            return "Token Expired";
         }
         setConfirmedAt(token);
         AppUser appUser = appUserService.findById(confirmationToken.getAppUserId());
         appUserService.enableAppUser(appUser.getEmail());
         StatusUpdateModel updateModel = StatusUpdateModel.builder().status("ACTIVE").authId(appUser.getId()).build();
         rabbitTemplate.convertAndSend("exchange.direct.updateStatus","Routing.updateStatus",updateModel);
-        return mailUtil.buildConfirmedPage("Email Confirmed");
+        return "valid";
     }
     @Transactional
     public AppUser confirmToken(String token){
-        Token confirmationToken = findByToken(token);
+        Token confirmationToken = findByTokenDEPR(token);
         if (confirmationToken.getConfirmedAt() != null) {
             throw new AuthServiceException(ErrorType.TOKEN_EXPIRED);
         }
@@ -76,7 +77,7 @@ public class TokenService {
         return appUserService.findById(confirmationToken.getAppUserId());
     }
     public void setConfirmedAt(String token) {
-        Token oToken = findByToken(token);
+        Token oToken = findByTokenDEPR(token);
         oToken.setConfirmedAt(LocalDateTime.now());
         update(oToken);
     }
@@ -104,16 +105,19 @@ public class TokenService {
         }
         return token;
     }
-    public Token findByToken(String token) {
-        System.out.println("OKEY2-1");
+    public Token findByTokenDEPR(String token){
         Token oToken = getAllCache().stream()
                 .filter(t -> t.getToken().equals(token))
                 .findFirst()
                 .orElse(null);
-        System.out.println("OKEY2-2");
         if (oToken == null) {
             throw new AuthServiceException(ErrorType.INVALID_TOKEN);
         }
         return oToken;
+    }
+    public Optional<Token> findByToken(String token){
+        return getAllCache().stream()
+                .filter(t -> t.getToken().equals(token))
+                .findFirst();
     }
 }

@@ -19,6 +19,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
+import java.util.Collections;
+
+import static org.hca.constant.EndPoints.*;
 
 
 @Configuration
@@ -32,27 +35,28 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login","/register").permitAll();
+                    auth.requestMatchers(LOGIN,REGISTER,CONFIRM).permitAll();
                     auth.requestMatchers("/api/v*/auth/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(formLogin -> {
-                    formLogin.loginPage("/login").permitAll();
+                    formLogin.loginPage(LOGIN).permitAll();
                     formLogin.defaultSuccessUrl("/welcome", true);
                 })
-                .logout(LogoutConfigurer::permitAll);
-//                .sessionManagement(sessionManagement -> {
-//                    sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-//                })
-//                .authenticationProvider(authProvider())
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .logout(LogoutConfigurer::permitAll)
+                .sessionManagement(sessionManagement -> {
+                    sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+                })
+                .authenticationProvider(authProvider());
         return http.build();
     }
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        ProviderManager authenticationManager = new ProviderManager(Arrays.asList(daoAuthenticationProvider()));
+        ProviderManager authenticationManager = new ProviderManager(Collections.singletonList(daoAuthenticationProvider()));
         authenticationManager.setAuthenticationEventPublisher(authenticationEventPublisher());
         return authenticationManager;
     }

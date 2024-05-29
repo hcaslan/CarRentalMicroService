@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 //import org.elasticsearch.index.query.BoolQueryBuilder;
 //import org.elasticsearch.index.query.QueryBuilders;
 import org.hca.domain.Car;
-import org.hca.dto.CarRabbitMqDto;
-import org.hca.mapper.CarMapper;
 import org.hca.repository.CarRepository;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
@@ -20,7 +18,6 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 //import org.elasticsearch.index.query.FuzzyQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,35 +34,31 @@ import java.util.stream.Collectors;
 public class CarService {
     private final CarRepository carRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    private final CarMapper carMapper;
     @RabbitListener(queues = "q.car.save")
-    public void save(CarRabbitMqDto carRabbitMqDto) {
-        carRepository.save(carMapper.dtoToCar(carRabbitMqDto));
+    public void save(Car car) {
+        carRepository.save(car);
     }
 
     public List<Car> fuzzyFindByName(String searchKey) {
-        // Construct the fuzzy query using QueryBuilders
-//        FuzzyQueryBuilder fuzzyQueryModelName = QueryBuilders.fuzzyQuery("modelName", searchKey);
-//        FuzzyQueryBuilder fuzzyQueryBrandName = QueryBuilders.fuzzyQuery("brandName", searchKey);
-//        FuzzyQuery fuzzyQueryModelName = new FuzzyQuery.Builder().queryName("modelName").fuzziness(searchKey).build();
-//        FuzzyQuery fuzzyQueryBrandName = new FuzzyQuery.Builder().queryName("brandName").fuzziness(searchKey).build();
-        Query fuzzyQueryModelName = FuzzyQuery.of(m -> m
-                .field("modelName")
-                .value(searchKey)
-        )._toQuery();
-        Query fuzzyQueryBrandName = FuzzyQuery.of(m -> m
-                .field("brandName")
-                .value(searchKey)
-        )._toQuery();
+//        Query fuzzyQueryModelName = FuzzyQuery.of(m -> m
+//                .field("modelName")
+//                .value(searchKey)
+//        )._toQuery();
+//        Query fuzzyQueryBrandName = FuzzyQuery.of(m -> m
+//                .field("brandName")
+//                .value(searchKey)
+//        )._toQuery();
+//        BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder().should(fuzzyQueryModelName,fuzzyQueryBrandName);
+//        NativeQuery query =  NativeQuery.builder()
+//                .withQuery(boolQueryBuilder.build()._toQuery())
+//                .build();
 
-        //Combine the fuzzy queries using a BoolQueryBuilder
-//        BoolQueryBuilder boolQueryBuilder2 = QueryBuilders.boolQuery()
-//                .should(fuzzyQueryModelName)
-//                .should(fuzzyQueryBrandName);
-        BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder().should(fuzzyQueryModelName,fuzzyQueryBrandName);
-        // Build the NativeSearchQuery with the combined query
+        Query fuzzyQueryName = FuzzyQuery.of(m -> m
+                .field("name")
+                .value(searchKey)
+        )._toQuery();
         NativeQuery query =  NativeQuery.builder()
-                .withQuery(boolQueryBuilder.build()._toQuery())
+                .withQuery(fuzzyQueryName)
                 .build();
 
         // Execute the search query

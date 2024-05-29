@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Car List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .car-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .car-item {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 15px;
+            width: 300px;
+            text-align: center;
+        }
+        .car-item img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .car-item h3 {
+            margin: 10px 0;
+        }
+        .car-item p {
+            margin: 5px 0;
+        }
+        .car-item .price {
+            font-size: 1.2em;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<h1>Available Cars</h1>
+<div class="car-list">
+    <div th:each="car : ${cars}" class="car-item">
+        <img th:src="@{${car.image}}" alt="Car Image">
+        <h3 th:text="${car.name}"></h3>
+        <p>Category: <span th:text="${car.category}"></span></p>
+        <p>Fuel Type: <span th:text="${car.fuelType}"></span></p>
+        <p>Gear Type: <span th:text="${car.gearType}"></span></p>
+        <p>Model Year: <span th:text="${car.modelYear}"></span></p>
+        <p class="price" th:text="${car.dailyPrice} + ' USD/day'"></p>
+    </div>
+</div>
+</body>
+</html>

@@ -50,29 +50,29 @@ public class AuthController {
         return ResponseEntity.ok(authService.createPassword(request));
     }
 
-    @PostMapping(AUTHENTICATION)
-    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
-        } catch (AuthenticationException e) {
-            throw new AuthServiceException(ErrorType.INCORRECT_EMAIL_OR_PASSWORD);
-        }
-        final UserDetails user = appUserService.loadUserByUsername(request.email());
-        if (user != null) {
-            return ResponseEntity.ok(jwtUtil.generateToken(user));
-        }
-        return ResponseEntity.badRequest().build();
-    }
+//    @PostMapping(AUTHENTICATION)
+//    public ResponseEntity<String> authenticate(@RequestBody AuthenticationRequest request) {
+//        try {
+//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+//        } catch (AuthenticationException e) {
+//            throw new AuthServiceException(ErrorType.INCORRECT_EMAIL_OR_PASSWORD);
+//        }
+//        final UserDetails user = appUserService.loadUserByUsername(request.email());
+//        if (user != null) {
+//            return ResponseEntity.ok(jwtUtil.generateToken(user));
+//        }
+//        return ResponseEntity.badRequest().build();
+//    }
 
-    @PostMapping(REGISTRATION)
-    public ResponseEntity<String> register(@RequestBody @Valid RegistrationRequest request) {
-        return ResponseEntity.ok(authService.register(request));
-    }
-
-    @GetMapping(CONFIRMATION)
-    public ResponseEntity<String> confirm(@RequestParam("token") String token) {
-        return ResponseEntity.ok(tokenService.confirmEmailToken(token));
-    }
+//    @PostMapping(REGISTRATION)
+//    public ResponseEntity<String> register(@RequestBody @Valid RegistrationRequest request) {
+//        return ResponseEntity.ok(authService.register(request));
+//    }
+//
+//    @GetMapping(CONFIRMATION)
+//    public ResponseEntity<String> confirm(@RequestParam("token") String token) {
+//        return ResponseEntity.ok(tokenService.confirmEmailToken(token));
+//    }
     @DeleteMapping(DELETE)
     public ResponseEntity<String> delete(@PathVariable("id") String appUserId) {
         return ResponseEntity.ok(appUserService.softDeleteAppUser(appUserId));

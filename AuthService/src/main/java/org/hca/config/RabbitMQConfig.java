@@ -33,11 +33,11 @@ public class RabbitMQConfig {
         return new DirectExchange("exchange.direct.mail");
     }
     @Bean(name = "createProfileDirectExchange")
-    DirectExchange createProfileExchange() {
+    DirectExchange createProfileDirectExchange() {
         return new DirectExchange("exchange.direct.createProfile");
     }
     @Bean(name = "updateStatusDirectExchange")
-    DirectExchange updateStatusExchange() {
+    DirectExchange updateStatusDirectExchange() {
         return new DirectExchange("exchange.direct.updateStatus");
     }
 
@@ -49,17 +49,17 @@ public class RabbitMQConfig {
                 .with("Routing.Mail");
     }
     @Bean
-    Binding bindingCreateProfile(@Qualifier("createProfileQueue") Queue createProfileQueue, @Qualifier("createProfileDirectExchange") DirectExchange createProfileExchange) {
+    Binding bindingCreateProfile(@Qualifier("createProfileQueue") Queue createProfileQueue, @Qualifier("createProfileDirectExchange") DirectExchange createProfileDirectExchange) {
         return BindingBuilder
                 .bind(createProfileQueue)
-                .to(createProfileExchange)
+                .to(createProfileDirectExchange)
                 .with("Routing.createProfile");
     }
     @Bean
-    Binding bindingUpdateStatus(@Qualifier("updateStatusQueue") Queue updateStatusQueue, @Qualifier("updateStatusDirectExchange") DirectExchange updateStatusExchange) {
+    Binding bindingUpdateStatus(@Qualifier("updateStatusQueue") Queue updateStatusQueue, @Qualifier("updateStatusDirectExchange") DirectExchange updateStatusDirectExchange) {
         return BindingBuilder
                 .bind(updateStatusQueue)
-                .to(updateStatusExchange)
+                .to(updateStatusDirectExchange)
                 .with("Routing.updateStatus");
     }
 
