@@ -11,14 +11,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.hca.constant.EndPoints.*;
@@ -38,15 +36,18 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(LOGIN,REGISTER,CONFIRM).permitAll();
-                    auth.requestMatchers("/api/v*/auth/**").permitAll();
-                    auth.anyRequest().authenticated();
+                    auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
+                    auth.requestMatchers("/", "/index.html", "/static/**", "/api/auth/**").permitAll();
+                    auth.requestMatchers(ROOT + AUTH + LOGIN, ROOT + AUTH + REGISTER, ROOT + AUTH + CONFIRM).permitAll();
+                    auth.requestMatchers(LOGIN, REGISTER,"/welcome",CONFIRM).permitAll();
+                    auth.requestMatchers(ROOT + AUTH + FIND_ALL, ROOT + AUTH + FIND_BY_ID).hasAuthority(AppUserRole.ADMIN.name());
+                    auth.anyRequest().permitAll();
                 })
-                .formLogin(formLogin -> {
-                    formLogin.loginPage(LOGIN).permitAll();
-                    formLogin.defaultSuccessUrl("/welcome", true);
-                })
-                .logout(LogoutConfigurer::permitAll)
+//                .formLogin(formLogin -> {
+//                    formLogin.loginPage(LOGIN).permitAll();
+//                    formLogin.defaultSuccessUrl("/welcome", true);
+//                })
+//                .logout(LogoutConfigurer::permitAll)
                 .sessionManagement(sessionManagement -> {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
                 })

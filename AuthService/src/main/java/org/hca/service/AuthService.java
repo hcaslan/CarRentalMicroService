@@ -97,7 +97,6 @@ public class AuthService {
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(10)
         );
-        System.out.println(confirmationToken);
         tokenService.save(confirmationToken);
         return token;
     }

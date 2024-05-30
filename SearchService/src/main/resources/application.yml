@@ -1,11 +1,8 @@
-server:
-  port: 9090
-
 spring:
-  elasticsearch:
-    uris: http://localhost:9200
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: user
-    password: password
+  cloud:
+    config:
+      uri: http://localhost:8888
+  config:
+    import: "configserver: "
+  application:
+    name: application-search
