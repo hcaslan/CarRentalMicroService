@@ -26,4 +26,5 @@ public class Car extends BaseEntity{
     private  int modelYear;
     private String plate;
     private double dailyPrice;
+    private int seats;
 }

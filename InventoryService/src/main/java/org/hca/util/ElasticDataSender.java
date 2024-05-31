@@ -2,8 +2,7 @@ package org.hca.util;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.hca.dto.CarRabbitMqDto;
-import org.hca.entity.Car;
+import org.hca.dto.response.CarResponseDto;
 import org.hca.mapper.CustomCarMapper;
 import org.hca.service.CarService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -18,10 +17,10 @@ public class ElasticDataSender {
 	private final CustomCarMapper customCarMapper;
 	private final RabbitTemplate rabbitTemplate;
 
-	@PostConstruct
+	//@PostConstruct
 	public void send(){
-		List<Car> allUserProfiles = carService.findAll();
-		allUserProfiles.forEach(car ->{
+		List<CarResponseDto> inventoryOutput = carService.inventoryOutput();
+		inventoryOutput.forEach(car ->{
 			rabbitTemplate.convertAndSend("exchange.direct.carSave","Routing.CarSave",car);
 		});
 	}

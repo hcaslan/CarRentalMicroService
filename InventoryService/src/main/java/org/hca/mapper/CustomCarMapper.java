@@ -1,9 +1,9 @@
 package org.hca.mapper;
 
 import lombok.RequiredArgsConstructor;
-import org.hca.dto.CarRabbitMqDto;
 import org.hca.dto.request.CarSaveRequest;
 import org.hca.dto.request.CarUpdateRequest;
+import org.hca.dto.response.CarResponseDto;
 import org.hca.entity.Brand;
 import org.hca.entity.Car;
 import org.hca.entity.Model;
@@ -27,6 +27,7 @@ public class CustomCarMapper {
         Model model = modelService.findById(carSaveRequest.modelId());
         Brand brand = brandService.findById(model.getBrandId());
         return (Car) Car.builder()
+                .modelId(carSaveRequest.modelId())
                 .category(category)
                 .fuelType(fuelType)
                 .gearType(gearType)
@@ -34,6 +35,7 @@ public class CustomCarMapper {
                 .dailyPrice(carSaveRequest.dailyPrice())
                 .modelYear(carSaveRequest.modelYear())
                 .image(carSaveRequest.image())
+                .seats(carSaveRequest.seats())
                 .name(brand.getName() + " " + model.getName())
                 .build();
     }
@@ -49,9 +51,31 @@ public class CustomCarMapper {
                 .dailyPrice(carUpdateRequest.dailyPrice())
                 .modelYear(carUpdateRequest.modelYear())
                 .image(carUpdateRequest.image())
+                .seats(carUpdateRequest.seats())
                 .createdAt(createdAt)
                 .name(brand.getName() + " " + model.getName())
                 .id(carUpdateRequest.id())
+                .build();
+    }
+    public CarResponseDto carToCarResponseDto(Car car){
+        Model model = modelService.findById(car.getModelId());
+        assert model != null;
+        Brand brand = brandService.findById(model.getBrandId());
+        assert brand != null;
+        return CarResponseDto.builder()
+                .id(car.getId())
+                .name(car.getName())
+                .brand(brand.getName())
+                .model(model.getName())
+                .category(car.getCategory())
+                .fuelType(car.getFuelType())
+                .gearType(car.getGearType())
+                .image(car.getImage())
+                .modelYear(car.getModelYear())
+                .dailyPrice(car.getDailyPrice())
+                .seats(car.getSeats())
+                .plate(car.getPlate())
+                .status(car.getStatus())
                 .build();
     }
 }
