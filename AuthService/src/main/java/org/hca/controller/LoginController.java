@@ -1,20 +1,44 @@
 package org.hca.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.hca.dto.request.AuthenticationRequest;
+import org.hca.exception.AuthServiceException;
+import org.hca.exception.ErrorType;
+import org.hca.service.AppUserService;
+import org.hca.service.AuthService;
+import org.hca.util.JwtUtil;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.hca.constant.Constants.LOGIN_HTML;
 import static org.hca.constant.EndPoints.*;
 
-@Controller
+@RestController
+@RequestMapping(ROOT+AUTH)
+@RequiredArgsConstructor
 public class LoginController {
-    @GetMapping(LOGIN)
-    public String showLoginForm() {
-        return LOGIN_HTML; // This refers to login.html in src/main/resources/templates
-    }
-    @GetMapping("/welcome")
-    public String showWelcome() {
-        return "welcome"; // This refers to welcome.html in src/main/resources/templates
+    private final AuthService authService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final AppUserService appUserService;
+
+    @PostMapping(LOGIN)
+    public ResponseEntity<String> login(@RequestBody AuthenticationRequest loginRequest) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
+        } catch (AuthenticationException e) {
+            throw new AuthServiceException(ErrorType.INCORRECT_EMAIL_OR_PASSWORD);
+        }
+        final UserDetails user = appUserService.loadUserByUsername(loginRequest.email());
+        if (user != null) {
+            return ResponseEntity.ok(jwtUtil.generateToken(user));
+        }
+        return ResponseEntity.badRequest().build();
     }
 }
+

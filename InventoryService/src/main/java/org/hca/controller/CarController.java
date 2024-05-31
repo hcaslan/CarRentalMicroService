@@ -34,6 +34,7 @@ public class CarController {
     }
     @GetMapping(FIND_ALL)
     public ResponseEntity<List<Car>> findAll() {
+        System.out.println("CarService.findAll");
         return ResponseEntity.ok(carService.findAll());
     }
     @GetMapping(FIND_BY_ID)

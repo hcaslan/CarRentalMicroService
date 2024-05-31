@@ -9,6 +9,7 @@ public class EndPoints {
     public static final String ROOT = API + VERSION;
     public static final String  REDIRECT= "redirect:";
 
+    public static final String APPUSER = "/appuser";
     public static final String AUTH = "/auth";
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
@@ -19,5 +20,7 @@ public class EndPoints {
     public static final String CHANGE_PASSWORD = "/password/change";
     public static final String RESET_PASSWORD = "/password/reset";
     public static final String CREATE_PASSWORD = "/password/create";
+    public static final String FIND_ALL = "/findall";
+    public static final String FIND_BY_ID = "/{id}";
     public static final String DELETE="/delete"+"/{id}";
 }

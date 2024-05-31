@@ -5,7 +5,10 @@ import org.hca.entity.enums.GearType;
 import org.hca.entity.enums.Status;
 
 public record CarSaveRequest(
-
-        String modelId, int modelYear, String image,
-        String plate, double dailyPrice) {
+        String modelId,
+        int modelYear,
+        int seats,
+        String image,
+        String plate,
+        double dailyPrice) {
 }

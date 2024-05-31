@@ -1,9 +1,9 @@
 package org.hca.service;
 
 import lombok.RequiredArgsConstructor;
-import org.hca.dto.CarRabbitMqDto;
 import org.hca.dto.request.CarSaveRequest;
 import org.hca.dto.request.CarUpdateRequest;
+import org.hca.dto.response.CarResponseDto;
 import org.hca.entity.Car;
 import org.hca.entity.enums.Category;
 import org.hca.entity.enums.FuelType;
@@ -16,6 +16,7 @@ import org.hca.repository.CarRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +29,18 @@ public class CarService {
     private final RabbitTemplate rabbitTemplate;
 
     public Car save(CarSaveRequest carSaveRequest, FuelType fuelType, GearType gearType, Category category) {
-        Car car = customCarMapper.carSaveRequestToCar(carSaveRequest,fuelType,gearType,category);
-        rabbitTemplate.convertAndSend("exchange.direct.carSave","Routing.CarSave",car);
-        return carRepository.save(car);
+        Car car = customCarMapper.carSaveRequestToCar(carSaveRequest, fuelType, gearType, category);
+        carRepository.save(car);
+        System.out.println(3);
+        CarResponseDto carResponseDto = customCarMapper.carToCarResponseDto(car);
+        System.out.println(4);
+        rabbitTemplate.convertAndSend("exchange.direct.carSave", "Routing.CarSave", carResponseDto);
+        System.out.println(5);
+        return car;
     }
 
     public Car update(CarUpdateRequest carUpdateRequest, FuelType fuelType, GearType gearType, Category category) {
-        Car car = customCarMapper.carUpdateRequestToCar(carUpdateRequest,fuelType,gearType,category);
+        Car car = customCarMapper.carUpdateRequestToCar(carUpdateRequest, fuelType, gearType, category);
         return carRepository.save(car);
     }
 
@@ -43,15 +49,24 @@ public class CarService {
         if (car.isPresent()) {
             car.get().setDeleted(true);
             return carRepository.save(car.get());
-        }else {
+        } else {
             throw new InventoryServiceException(ErrorType.CAR_NOT_FOUND);
         }
     }
+
     public List<Car> findAll() {
         return carRepository.findAll();
     }
 
+    public List<CarResponseDto> inventoryOutput() {
+        List<CarResponseDto> inventoryOutput = new ArrayList<>();
+        carRepository.findAll().forEach(car -> {
+            inventoryOutput.add(customCarMapper.carToCarResponseDto(car));
+        });
+        return inventoryOutput;
+    }
+
     public Car findById(String carId) {
-        return carRepository.findById(carId).orElseThrow(()-> new InventoryServiceException(ErrorType.CAR_NOT_FOUND));
+        return carRepository.findById(carId).orElseThrow(() -> new InventoryServiceException(ErrorType.CAR_NOT_FOUND));
     }
 }

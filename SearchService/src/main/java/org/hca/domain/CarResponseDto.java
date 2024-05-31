@@ -6,22 +6,27 @@ import org.hca.domain.enums.Category;
 import org.hca.domain.enums.FuelType;
 import org.hca.domain.enums.GearType;
 import org.hca.domain.enums.Status;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
-@EqualsAndHashCode(callSuper = true)
+
+
 @Data
-@SuperBuilder
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Document(indexName = "cars")
-public class Car extends BaseEntity{
+public class CarResponseDto {
+    private String id;
+    private String name;
+    private String brand;
+    private String model;
     private Category category;
     private FuelType fuelType;
     private GearType gearType;
     private Status status;
-    private  int modelYear;
-    private String plate;
     private String image;
+    private String plate;
+    private  int modelYear;
     private double dailyPrice;
+    private int seats;
 }

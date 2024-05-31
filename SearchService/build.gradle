@@ -1,4 +1,5 @@
 dependencies {
     implementation libs.springBootAmqp
     implementation libs.springBootDataElastic
+    implementation libs.springCloudConfigClient
 }
