@@ -31,23 +31,28 @@ public class CarService {
     public Car save(CarSaveRequest carSaveRequest, FuelType fuelType, GearType gearType, Category category) {
         Car car = customCarMapper.carSaveRequestToCar(carSaveRequest, fuelType, gearType, category);
         carRepository.save(car);
-        System.out.println(3);
         CarResponseDto carResponseDto = customCarMapper.carToCarResponseDto(car);
-        System.out.println(4);
         rabbitTemplate.convertAndSend("exchange.direct.carSave", "Routing.CarSave", carResponseDto);
-        System.out.println(5);
         return car;
     }
 
     public Car update(CarUpdateRequest carUpdateRequest, FuelType fuelType, GearType gearType, Category category) {
-        Car car = customCarMapper.carUpdateRequestToCar(carUpdateRequest, fuelType, gearType, category);
-        return carRepository.save(car);
+        Optional<Car> optionalCar = customCarMapper.carUpdateRequestToCar(carUpdateRequest, fuelType, gearType, category);
+        if(optionalCar.isPresent()) {
+            Car car = optionalCar.get();
+            CarResponseDto carResponseDto = customCarMapper.carToCarResponseDto(car);
+            rabbitTemplate.convertAndSend("exchange.direct.carSave", "Routing.CarSave", carResponseDto);
+            carRepository.save(car);
+        }
+        return optionalCar.orElseThrow(()-> new InventoryServiceException(ErrorType.CAR_NOT_FOUND));
     }
 
     public Car delete(String carId) {
         Optional<Car> car = carRepository.findById(carId);
         if (car.isPresent()) {
             car.get().setDeleted(true);
+            CarResponseDto carResponseDto = customCarMapper.carToCarResponseDto(car.get());
+            rabbitTemplate.convertAndSend("exchange.direct.carSave", "Routing.CarSave", carResponseDto);
             return carRepository.save(car.get());
         } else {
             throw new InventoryServiceException(ErrorType.CAR_NOT_FOUND);

@@ -20,6 +20,7 @@ import static org.hca.constant.EndPoints.*;
 @RestController
 @RequestMapping(ROOT+AUTH)
 @RequiredArgsConstructor
+@CrossOrigin
 public class RegistrationController {
     private final AuthService authService;
     private final TokenService tokenService;

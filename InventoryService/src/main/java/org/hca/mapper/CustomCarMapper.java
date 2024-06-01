@@ -16,6 +16,7 @@ import org.hca.service.ModelService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,23 +40,28 @@ public class CustomCarMapper {
                 .name(brand.getName() + " " + model.getName())
                 .build();
     }
-    public Car carUpdateRequestToCar(CarUpdateRequest carUpdateRequest, FuelType fuelType, GearType gearType, Category category){
-        Model model = modelService.findById(carUpdateRequest.modelId());
-        Brand brand = brandService.findById(model.getBrandId());
-        LocalDateTime createdAt = carRepository.findById(carUpdateRequest.id()).get().getCreatedAt();
-        return (Car) Car.builder()
-                .category(category)
-                .fuelType(fuelType)
-                .gearType(gearType)
-                .plate(carUpdateRequest.plate())
-                .dailyPrice(carUpdateRequest.dailyPrice())
-                .modelYear(carUpdateRequest.modelYear())
-                .image(carUpdateRequest.image())
-                .seats(carUpdateRequest.seats())
-                .createdAt(createdAt)
-                .name(brand.getName() + " " + model.getName())
-                .id(carUpdateRequest.id())
-                .build();
+    public Optional<Car> carUpdateRequestToCar(CarUpdateRequest carUpdateRequest, FuelType fuelType, GearType gearType, Category category){
+        Optional<Car> optionalCar = carRepository.findById(carUpdateRequest.id());
+        if(optionalCar.isPresent()){
+            Car car = optionalCar.get();
+            Model model = modelService.findById(carUpdateRequest.modelId());
+            Brand brand = brandService.findById(model.getBrandId());
+            return Optional.ofNullable((Car) Car.builder()
+                    .category(category)
+                    .fuelType(fuelType)
+                    .gearType(gearType)
+                    .plate(carUpdateRequest.plate())
+                    .dailyPrice(carUpdateRequest.dailyPrice())
+                    .modelYear(carUpdateRequest.modelYear())
+                    .image(carUpdateRequest.image())
+                    .seats(carUpdateRequest.seats())
+                    .createdAt(car.getCreatedAt())
+                    .name(brand.getName() + " " + model.getName())
+                    .id(carUpdateRequest.id())
+                    .deleted(car.isDeleted())
+                    .build());
+        }
+        return Optional.empty();
     }
     public CarResponseDto carToCarResponseDto(Car car){
         Model model = modelService.findById(car.getModelId());
@@ -76,6 +82,7 @@ public class CustomCarMapper {
                 .seats(car.getSeats())
                 .plate(car.getPlate())
                 .status(car.getStatus())
+                .deleted(car.isDeleted())
                 .build();
     }
 }

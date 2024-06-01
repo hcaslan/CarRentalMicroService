@@ -21,6 +21,7 @@ import static org.hca.constant.EndPoints.*;
 @RestController
 @RequestMapping(ROOT+AUTH)
 @RequiredArgsConstructor
+@CrossOrigin
 public class LoginController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
