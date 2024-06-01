@@ -21,4 +21,5 @@ public class CarResponseDto {
     private  int modelYear;
     private double dailyPrice;
     private int seats;
+    private boolean deleted;
 }

@@ -15,16 +15,34 @@ import static org.hca.constant.EndPoints.*;
 @RestController
 @RequestMapping(ROOT + SEARCH)
 @RequiredArgsConstructor
+@CrossOrigin
 public class CarController {
     private final CarService carService;
 
     @GetMapping(FIND_ALL)
-    @CrossOrigin(origins = "http://localhost:3001")
     public ResponseEntity<Page<CarResponseDto>> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         System.out.println("SearchService.findAll");
         System.out.println("page: " + page);
         System.out.println("size: " + size);
         return ResponseEntity.ok(carService.findAll(page, size));
+    }
+    @GetMapping(FILTER)
+    public ResponseEntity<Page<CarResponseDto>> filter(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String gearType,
+            @RequestParam(required = false) String fuelType,
+            @RequestParam(required = false) String minDaily,
+            @RequestParam(required = false) String maxDaily) {
+
+        System.out.println("category: " + category);
+        System.out.println("gearType: " + gearType);
+        System.out.println("fuelType: " + fuelType);
+        System.out.println("minDaily: " + minDaily);
+        System.out.println("maxDaily: " + maxDaily);
+
+        return ResponseEntity.ok(carService.filter(page, size, category, gearType, fuelType, minDaily, maxDaily));
     }
 
     @GetMapping("/fuzzyFindByName")

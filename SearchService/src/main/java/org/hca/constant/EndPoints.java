@@ -21,6 +21,7 @@ public class EndPoints {
     public static final String DELETE="/delete";
     public static final String SAVE="/save";
     public static final String FIND_ALL="/findAll";
+    public static final String FILTER="/filter";
     public static final String FIND_BY_ID="/findById";
 
 
