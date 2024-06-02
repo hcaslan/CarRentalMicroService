@@ -1,0 +1,134 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.car-list-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main-content {
+    padding: 80px 20px 20px; /* Add padding-top to accommodate the fixed header */
+    flex: 1;
+    overflow-y: auto;
+}
+
+.car-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.car-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    width: calc(20% - 20px); /* Adjust width to fit 5 cards in a row */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.car-card img {
+    width: 100%;
+    height: 200px; /* Fixed height for the images */
+    object-fit: cover;
+}
+
+.car-details {
+    padding: 15px;
+}
+
+.car-details h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+.car-details p {
+    margin: 0 0 5px;
+}
+
+.car-properties p {
+    color: white;
+    margin: 5px 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.car-card button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #e60000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.car-card button:hover {
+    background-color: #cc0000;
+}
+.reservation-info {
+    border: 1px solid #ccc;
+    padding: 50px;
+    background-color: #f9f9f9;
+}
+
+.reservation-info h2 {
+    margin-top: 0;
+}
+
+.reservation-info p {
+    margin: 5px 0;
+}
+
+.reservation-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.reservation-steps button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #e9ecef;
+}
+
+.reservation-steps .current-step {
+    background-color: white;
+    color: red;
+    border: 1px solid red;
+}
+.reservation-steps .past-step {
+    cursor: pointer;
+    background-color: white;
+    color: green;
+    border: 1px solid green;
+}
+.reservation-steps .next-step {
+    background-color: #e9ecef;
+    color: grey;
+    border: 1px solid #ccc;
+}
+
+.reservation-steps .past-step:hover {
+    background-color: green;
+    color: white;
+}
+
+.car-properties .total-price{
+    color: white;
+    margin: 5px 0;
+    background-color: green;
+    padding: 20px;
+    border-radius: 10px;
+}
+

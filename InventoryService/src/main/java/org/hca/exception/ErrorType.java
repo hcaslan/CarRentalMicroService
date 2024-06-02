@@ -15,7 +15,8 @@ public enum ErrorType {
             HttpStatus.INTERNAL_SERVER_ERROR),
     BRAND_NOT_FOUND(3003,"Brand cannot found" , HttpStatus.BAD_REQUEST),
     MODEL_NOT_FOUND(3003,"Model cannot found" , HttpStatus.BAD_REQUEST),
-    CAR_NOT_FOUND(3003,"Car cannot found" , HttpStatus.BAD_REQUEST);
+    CAR_NOT_FOUND(3003,"Car cannot found" , HttpStatus.BAD_REQUEST),
+    OFFICE_NOT_FOUND(3003,"Office cannot found" , HttpStatus.BAD_REQUEST);
 
     private Integer code;
     private String message;

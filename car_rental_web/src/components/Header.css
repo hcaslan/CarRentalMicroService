@@ -1,0 +1,143 @@
+.header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #d2232a;
+    padding: 10px 20px;
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+    font-size: 24px;
+}
+
+.header .logo {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.header .logo a {
+    font-size: 46px;
+    margin-left: 20px;
+    color: white;
+    text-decoration: none;
+    word-wrap: break-word;
+}
+
+.header .logo img {
+    height: 40px;
+}
+
+.header .nav-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    position: relative;
+}
+
+.header .nav-list li {
+    position: relative;
+    padding: 0 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; 
+}
+
+.nav-list li::before,
+.nav-list li::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 100%;
+    background-color: white;
+}
+
+.nav-list li::before {
+    left: 0;
+}
+
+.nav-list li::after {
+    right: 0;
+}
+
+.nav-list li:first-child::after {
+    display: none; /* Hide the right separator of the first item */
+}
+
+.nav-list li:last-child::before {
+    display: none; /* Hide the left separator of the last item */
+}
+
+.header .nav-list li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    word-wrap: break-word;
+}
+
+.header .user-actions {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.header .user-actions a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+.header .filter-selector {
+    display: flex;
+    align-items: center;
+}
+
+.header .filter {
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+}
+
+.header .filter label {
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.header .filter select {
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+}
+
+.header .filter-selector form {
+    display: flex;
+}
+
+.header .filter.daily-price-filter {
+    display: flex;
+    align-items: center;
+}
+
+.header .daily-price-inputs {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.header .daily-price-inputs input {
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}

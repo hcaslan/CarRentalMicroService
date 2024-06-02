@@ -19,17 +19,33 @@ public class RabbitMQConfig {
     Queue carSaveQueue(){
         return new Queue("q.car.save");
     }
+    @Bean(name = "officeSaveQueue")
+    Queue carOfficeQueue(){
+        return new Queue("q.office.save");
+    }
     @Bean(name = "carSaveDirectExchange")
     DirectExchange carSaveDirectExchange(){
         return new DirectExchange("exchange.direct.carSave");
     }
+    @Bean(name = "officeSaveDirectExchange")
+    DirectExchange officeSaveDirectExchange(){
+        return new DirectExchange("exchange.direct.officeSave");
+    }
 
     @Bean
-    Binding bindingProfileUpdate(@Qualifier("carSaveQueue") Queue carSaveQueue,@Qualifier("carSaveDirectExchange") DirectExchange carSaveDirectExchange){
+    Binding bindingCarSave(@Qualifier("carSaveQueue") Queue carSaveQueue,@Qualifier("carSaveDirectExchange") DirectExchange carSaveDirectExchange){
         return BindingBuilder
                 .bind(carSaveQueue)
                 .to(carSaveDirectExchange)
                 .with("Routing.CarSave");
+    }
+
+    @Bean
+    Binding bindingOfficeSave(@Qualifier("officeSaveQueue") Queue officeSaveQueue,@Qualifier("officeSaveDirectExchange") DirectExchange officeSaveDirectExchange){
+        return BindingBuilder
+                .bind(officeSaveQueue)
+                .to(officeSaveDirectExchange)
+                .with("Routing.OfficeSave");
     }
     @Bean
     MessageConverter messageConverter(){

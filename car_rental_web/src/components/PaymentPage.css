@@ -1,0 +1,44 @@
+.payment-page {
+    font-family: Arial, sans-serif;
+}
+
+.main-content {
+    padding: 2em;
+}
+
+.reservation-summary {
+    border: 1px solid #ccc;
+    padding: 1em;
+    margin-bottom: 2em;
+}
+
+.payment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.payment-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.payment-form input {
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.payment-form button {
+    padding: 0.75em;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.payment-form button:hover {
+    background-color: #555;
+}

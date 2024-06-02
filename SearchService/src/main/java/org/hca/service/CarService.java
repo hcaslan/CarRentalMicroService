@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.hca.domain.CarResponseDto;
 import org.hca.domain.enums.Status;
 import org.hca.repository.CarRepository;
+import org.hca.util.Helper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.domain.*;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
@@ -86,7 +87,7 @@ public class CarService {
             boolQueryBuilder.must(fuzzyQueryFuelType);
         }
 
-        if (isNullOrEmptyOrWhitespace(minDaily) && isNullOrEmptyOrWhitespace(maxDaily)) {
+        if (Helper.isNullOrEmptyOrWhitespace(minDaily) && Helper.isNullOrEmptyOrWhitespace(maxDaily)) {
             Query priceRangeQuery = RangeQuery.of(r -> r
                     .field("dailyPrice")
                     .gte(JsonData.fromJson(minDaily))
@@ -121,11 +122,6 @@ public class CarService {
         return new PageImpl<>(carResponseDtoList, pageable, totalHits);
     }
 
-    private static boolean isNullOrEmptyOrWhitespace(String str) {
-        if (str == null) {
-            return false;
-        }
-        return !str.trim().isEmpty();
-    }
+
 
 }

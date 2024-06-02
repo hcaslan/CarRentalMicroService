@@ -1,0 +1,84 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.office-list-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main-content {
+    padding: 80px 20px 20px; /* Add padding-top to accommodate the fixed header */
+    flex: 1;
+    overflow-y: auto;
+}
+
+.office-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.office-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    width: calc(20% - 20px); /* Adjust width to fit 5 cards in a row */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.office-card img {
+    width: 100%;
+    height: 200px; /* Fixed height for the images */
+    object-fit: cover;
+}
+
+.office-details {
+    padding: 15px;
+}
+
+.office-details h2 {
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+.office-details p {
+    margin: 0 0 5px;
+}
+
+.office-properties p {
+    color: white;
+    margin: 5px 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.office-card button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #e60000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.office-card button:hover {
+    background-color: #cc0000;
+}
+
+.office-details .office-name {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    height: 3em;
+}
