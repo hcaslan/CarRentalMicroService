@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.hca.constant.EndPoints.*;
 
 @RestController
-@RequestMapping(ROOT + SEARCH)
+@RequestMapping(ROOT + SEARCH + CARS)
 @RequiredArgsConstructor
 @CrossOrigin
 public class CarController {
@@ -21,9 +21,6 @@ public class CarController {
 
     @GetMapping(FIND_ALL)
     public ResponseEntity<Page<CarResponseDto>> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        System.out.println("SearchService.findAll");
-        System.out.println("page: " + page);
-        System.out.println("size: " + size);
         return ResponseEntity.ok(carService.findAll(page, size));
     }
     @GetMapping(FILTER)
@@ -35,12 +32,6 @@ public class CarController {
             @RequestParam(required = false) String fuelType,
             @RequestParam(required = false) String minDaily,
             @RequestParam(required = false) String maxDaily) {
-
-        System.out.println("category: " + category);
-        System.out.println("gearType: " + gearType);
-        System.out.println("fuelType: " + fuelType);
-        System.out.println("minDaily: " + minDaily);
-        System.out.println("maxDaily: " + maxDaily);
 
         return ResponseEntity.ok(carService.filter(page, size, category, gearType, fuelType, minDaily, maxDaily));
     }

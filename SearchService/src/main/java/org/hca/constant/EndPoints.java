@@ -12,9 +12,9 @@ public class EndPoints {
 
     //entities:
     public static final String SEARCH="/search";
-    public static final String CAR="/car";
-    public static final String BRAND="/brand";
-    public static final String MODEL="/model";
+    public static final String CARS="/cars";
+    public static final String OFFICES="/offices";
+
 
     //methods:
     public static final String UPDATE="/update";
