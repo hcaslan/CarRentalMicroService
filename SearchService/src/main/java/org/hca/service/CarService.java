@@ -59,12 +59,12 @@ public class CarService {
         return carRepository.findAll(pageable);
     }
 
-    public Page<CarResponseDto> filter(int page, int size, String category, String gearType, String fuelType, String minDaily, String maxDaily) {
+    public Page<CarResponseDto> filter(int page, int size, String category, String gearType, String fuelType, String minDaily, String maxDaily, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(page, size);
         BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
 
         if (category != null) {
-            Query fuzzyQueryCategory = FuzzyQuery.of(m -> m
+            Query fuzzyQueryCategory = TermQuery.of(m -> m
                     .field("category")
                     .value(category)
             )._toQuery();
@@ -72,7 +72,7 @@ public class CarService {
         }
 
         if (gearType != null) {
-            Query fuzzyQueryGearType = FuzzyQuery.of(m -> m
+            Query fuzzyQueryGearType = TermQuery.of(m -> m
                     .field("gearType")
                     .value(gearType)
             )._toQuery();
@@ -80,7 +80,7 @@ public class CarService {
         }
 
         if (fuelType != null) {
-            Query fuzzyQueryFuelType = FuzzyQuery.of(m -> m
+            Query fuzzyQueryFuelType = TermQuery.of(m -> m
                     .field("fuelType")
                     .value(fuelType)
             )._toQuery();
@@ -94,6 +94,15 @@ public class CarService {
                     .lte(JsonData.fromJson(maxDaily))
             )._toQuery();
             boolQueryBuilder.must(priceRangeQuery);
+        }
+
+        if(Helper.isNullOrEmptyOrWhitespace(startDate) && Helper.isNullOrEmptyOrWhitespace(endDate)) {
+            Query dateRangeQuery = RangeQuery.of(r -> r
+                    .field("rentals.startDate")
+                    .gte(JsonData.fromJson(startDate))
+                    .lte(JsonData.fromJson(endDate))
+            )._toQuery();
+            boolQueryBuilder.mustNot(dateRangeQuery);
         }
 
         Query statusQuery = TermQuery.of(t -> t

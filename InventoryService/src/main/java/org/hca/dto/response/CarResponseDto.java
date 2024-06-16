@@ -1,7 +1,11 @@
 package org.hca.dto.response;
 
 import lombok.*;
+import org.hca.entity.Rental;
 import org.hca.entity.enums.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,4 +26,5 @@ public class CarResponseDto {
     private double dailyPrice;
     private int seats;
     private boolean deleted;
+    private List<Rental> rentals;
 }

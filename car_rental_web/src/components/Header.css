@@ -70,11 +70,11 @@
 }
 
 .nav-list li:first-child::after {
-    display: none; /* Hide the right separator of the first item */
+    display: none;
 }
 
 .nav-list li:last-child::before {
-    display: none; /* Hide the left separator of the last item */
+    display: none;
 }
 
 .header .nav-list li a {

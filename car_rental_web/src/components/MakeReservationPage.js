@@ -33,7 +33,6 @@ const MakeReservationPage = () => {
 
 
     useEffect(() => {
-        // Calculate the number of days between pickup and dropoff dates
         if (pickupDate && dropoffDate) {
             const pickup = new Date(pickupDate);
             const dropoff = new Date(dropoffDate);
@@ -43,23 +42,48 @@ const MakeReservationPage = () => {
         }
     }, [pickupDate, dropoffDate]);
 
-    // Fetch cars
+    // State for filters
+    const [category, setCategory] = useState(null);
+    const [gearType, setGearType] = useState(null);
+    const [fuelType, setFuelType] = useState(null);
+    const [minDaily, setMinDaily] = useState('');
+    const [maxDaily, setMaxDaily] = useState('');
+
     const fetchCars = useCallback(() => {
         axios.get('http://localhost:3004/api/v1/search/cars/filter', {
-            params: { page, size }
+            params: { page, size, category, gearType, fuelType, minDaily, maxDaily }
         })
             .then(response => {
+                console.log('API response:', response.data);
                 setCars(response.data.content);
                 setTotalPages(response.data.totalPages);
             })
             .catch(error => {
                 console.error('There was an error fetching the car data!', error);
             });
-    }, [page, size]);
+    }, [page, size, category, gearType, fuelType, minDaily, maxDaily]);
 
     useEffect(() => {
         fetchCars();
     }, [fetchCars]);
+
+    const handleCategoryChange = (e) => {
+        setCategory(e.target.value === 'null' ? null : e.target.value);
+    };
+
+    const handleGearTypeChange = (e) => {
+        setGearType(e.target.value === 'null' ? null : e.target.value);
+    };
+
+    const handleFuelTypeChange = (e) => {
+        setFuelType(e.target.value === 'null' ? null : e.target.value);
+    };
+    const handleMinDaily = (e) => {
+        setMinDaily(e.target.value === '' ? '' : Number(e.target.value));
+    };
+    const handleMaxDaily = (e) => {
+        setMaxDaily(e.target.value === '' ? '' : Number(e.target.value));
+    };
 
     const handleRentNow = (carId) => {
         const reservationData = {
@@ -73,7 +97,7 @@ const MakeReservationPage = () => {
             car_location
         };
         
-        // Redirect to the reservation confirmation page or another endpoint
+        // Redirect to the reservation confirmation page
         navigate(`/payment-information?${new URLSearchParams(reservationData).toString()}`);
     };
     const handlePastStep = () => {
@@ -89,14 +113,68 @@ const MakeReservationPage = () => {
         <div className="car-list-page">
             <header className="header">
                 <div className="logo">
-                    <a href="/welcome"><img src="/logo.png" alt="Logo" /></a>
+                    <a href="/welcome"><img src="/logo.png" alt="Logo"/></a>
                     <a href="/welcome">HCA</a>
                 </div>
-                <ul className="nav-list">
-                    <li><a href="/rezervations">Reservation Management</a></li>
-                    <li><a href="/inventory">Cars</a></li>
-                    <li><a href="/locations">Our Offices</a></li>
-                </ul>
+                <div className="filter-selector">
+                    <form>
+                        <div className="filter">
+                            <label htmlFor="filter1">Category:</label>
+                            <select id="filter1" name="filter1" value={category} onChange={handleCategoryChange}>
+                                <option value="null">SELECT</option>
+                                <option value="small">SMALL</option>
+                                <option value="medium">MEDIUM</option>
+                                <option value="large">LARGE</option>
+                                <option value="estate">ESTATE</option>
+                                <option value="premium">PREMIUM</option>
+                                <option value="carrier">CARRIER</option>
+                                <option value="suv">SUV</option>
+                            </select>
+                        </div>
+                        <div className="filter">
+                            <label htmlFor="filter2">Fuel Type:</label>
+                            <select id="filter2" name="filter2" value={fuelType} onChange={handleFuelTypeChange}>
+                                <option value="null">SELECT</option>
+                                <option value="petrol">PETROL</option>
+                                <option value="diesel">DIESEL</option>
+                                <option value="electric">ELECTRIC</option>
+                                <option value="hybrid">HYBRID</option>
+                                <option value="gas">GAS</option>
+                            </select>
+                        </div>
+                        <div className="filter">
+                            <label htmlFor="filter3">Gear Type:</label>
+                            <select id="filter3" name="filter3" value={gearType} onChange={handleGearTypeChange}>
+                                <option value="null">SELECT</option>
+                                <option value="automatic">AUTOMATIC</option>
+                                <option value="manual">MANUAL</option>
+                            </select>
+                        </div>
+                        <div className="filter daily-price-filter">
+                            <label htmlFor="minDaily">Daily Price:</label>
+                            <div className="daily-price-inputs">
+                                <input
+                                    type="number"
+                                    step="any"
+                                    value={minDaily}
+                                    onChange={handleMinDaily}
+                                    min="5"
+                                    id="minDaily"
+                                    placeholder="Min"
+                                />
+                                <input
+                                    type="number"
+                                    step="any"
+                                    value={maxDaily}
+                                    onChange={handleMaxDaily}
+                                    min="5"
+                                    id="maxDaily"
+                                    placeholder="Max"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <div className="user-actions">
                     <a href="/login" className="login">Login</a>
                     <a href="/register" className="register">Register</a>
@@ -121,7 +199,7 @@ const MakeReservationPage = () => {
                     {cars.map(car => (
                         <div key={car.id} className="car-card">
                             <div className="card-image-container">
-                                <img src={`/${car.image}`} alt={car.name} />
+                                <img src={`/${car.image}`} alt={car.name}/>
                             </div>
                             <div className="car-details">
                                 <h2>{car.name}</h2>
@@ -132,7 +210,8 @@ const MakeReservationPage = () => {
                                     <p><strong>Fuel Type:</strong> {car.fuelType}</p>
                                     <p><strong>Seats:</strong> {car.seats}</p>
                                     <p><strong>Daily Price:</strong> ${car.dailyPrice}</p>
-                                    <p className="total-price"><strong>Total Price:</strong> ${(car.dailyPrice * dayCount).toFixed(2)}</p>
+                                    <p className="total-price"><strong>Total
+                                        Price:</strong> ${(car.dailyPrice * dayCount).toFixed(2)}</p>
                                 </div>
                                 <button onClick={() => handleRentNow(car.id)}>Select</button>
                             </div>
@@ -150,8 +229,11 @@ const MakeReservationPage = () => {
                             max={totalPages}
                         />
                     </label>
-                    <button onClick={() => setPage(prev => Math.max(prev - 1, 0))} disabled={page === 0}>Previous</button>
-                    <button onClick={() => setPage(prev => (prev < totalPages - 1 ? prev + 1 : prev))} disabled={page >= totalPages - 1}>Next</button>
+                    <button onClick={() => setPage(prev => Math.max(prev - 1, 0))} disabled={page === 0}>Previous
+                    </button>
+                    <button onClick={() => setPage(prev => (prev < totalPages - 1 ? prev + 1 : prev))}
+                            disabled={page >= totalPages - 1}>Next
+                    </button>
                 </div>
             </main>
         </div>

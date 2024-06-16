@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
-import './Form.css'; // Make sure to import the CSS
+import './Form.css';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');

@@ -23,6 +23,11 @@ public class RabbitMQConfig {
     Queue carOfficeQueue(){
         return new Queue("q.office.save");
     }
+    @Bean(name = "rentalSaveQueue")
+    Queue rentalSaveQueue(){
+        return new Queue("q.rental.save");
+    }
+
     @Bean(name = "carSaveDirectExchange")
     DirectExchange carSaveDirectExchange(){
         return new DirectExchange("exchange.direct.carSave");
@@ -30,6 +35,10 @@ public class RabbitMQConfig {
     @Bean(name = "officeSaveDirectExchange")
     DirectExchange officeSaveDirectExchange(){
         return new DirectExchange("exchange.direct.officeSave");
+    }
+    @Bean(name = "rentalSaveDirectExchange")
+    DirectExchange rentalSaveDirectExchange(){
+        return new DirectExchange("exchange.direct.rentalSave");
     }
 
     @Bean
@@ -46,6 +55,13 @@ public class RabbitMQConfig {
                 .bind(officeSaveQueue)
                 .to(officeSaveDirectExchange)
                 .with("Routing.OfficeSave");
+    }
+    @Bean
+    Binding bindingRentalSave(@Qualifier("rentalSaveQueue") Queue rentalSaveQueue,@Qualifier("rentalSaveDirectExchange") DirectExchange rentalSaveDirectExchange){
+        return BindingBuilder
+                .bind(rentalSaveQueue)
+                .to(rentalSaveDirectExchange)
+                .with("Routing.RentalSave");
     }
     @Bean
     MessageConverter messageConverter(){
