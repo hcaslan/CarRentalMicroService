@@ -9,6 +9,9 @@ import org.hca.entity.enums.Status;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Data
@@ -27,4 +30,5 @@ public class Car extends BaseEntity{
     private String plate;
     private double dailyPrice;
     private int seats;
+    private List<Rental> rentals = new ArrayList<>();
 }

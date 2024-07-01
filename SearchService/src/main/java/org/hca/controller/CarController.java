@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,14 +32,21 @@ public class CarController {
             @RequestParam(required = false) String gearType,
             @RequestParam(required = false) String fuelType,
             @RequestParam(required = false) String minDaily,
-            @RequestParam(required = false) String maxDaily) {
+            @RequestParam(required = false) String maxDaily,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
 
-        return ResponseEntity.ok(carService.filter(page, size, category, gearType, fuelType, minDaily, maxDaily));
+        return ResponseEntity.ok(carService.filter(page, size, category, gearType, fuelType, minDaily, maxDaily, startDate, endDate));
     }
 
     @GetMapping("/fuzzyFindByName")
     public ResponseEntity<List<CarResponseDto>> fuzzyFindByName(@RequestParam String name) {
         return ResponseEntity.ok(carService.fuzzyFindByName(name));
+    }
+
+    @GetMapping("/findById/{carId}")
+    public ResponseEntity<CarResponseDto> findById(@PathVariable String carId) {
+        return ResponseEntity.ok(carService.findById(carId));
     }
 
     @GetMapping("/rangeByPrice")

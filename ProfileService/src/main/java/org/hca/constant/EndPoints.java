@@ -15,6 +15,9 @@ public class EndPoints {
 
     //methods:
     public static final String UPDATE="/update";
+    public static final String SAVE="/save";
+    public static final String FIND_ALL="/findall";
+    public static final String FIND_BY_ID="/findbyid/{id}";
     public static final String STATUS_UPDATE="/status-update";
 
 }

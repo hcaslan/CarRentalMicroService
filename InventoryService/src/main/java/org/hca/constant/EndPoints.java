@@ -16,6 +16,7 @@ public class EndPoints {
     public static final String BRAND="/brand";
     public static final String MODEL="/model";
     public static final String OFFICE="/office";
+    public static final String RENTAL="/rental";
 
     //methods:
     public static final String UPDATE="/update";

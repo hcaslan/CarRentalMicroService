@@ -2,6 +2,7 @@ package org.hca.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.hca.dto.request.ProfileSaveRequestDto;
 import org.hca.dto.request.ProfileUpdateRequestDto;
 import org.hca.entity.EStatus;
 import org.hca.entity.Profile;
@@ -114,5 +115,20 @@ public class ProfileService {
     }
     public Profile findByEmail(String email){
         return getAllCache().stream().filter(profile -> profile.getEmail().equals(email)).findFirst().orElseThrow(()-> new ProfileServiceException(ErrorType.USER_NOT_FOUND));
+    }
+
+    public List<Profile> findAll() {
+        return profileRepository.findAll();
+    }
+
+    public Profile saveDto(ProfileSaveRequestDto dto) {
+        Profile profile = profileMapper.dtoToProfile(dto);
+        save(profile);
+        return profile;
+    }
+    @RabbitListener(queues = "q.get.profile.id")
+    public String getProfileId(String email) {
+        System.out.println(email);
+        return findByEmail(email).getId();
     }
 }

@@ -1,5 +1,6 @@
 package org.hca.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.hca.dto.request.AuthenticationRequest;
 import org.hca.exception.AuthServiceException;
@@ -15,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 import static org.hca.constant.Constants.LOGIN_HTML;
 import static org.hca.constant.EndPoints.*;
 
@@ -27,7 +30,6 @@ public class LoginController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final AppUserService appUserService;
-
     @PostMapping(LOGIN)
     public ResponseEntity<String> login(@RequestBody AuthenticationRequest loginRequest) {
         try {

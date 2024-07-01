@@ -1,5 +1,6 @@
 package org.hca.mapper;
 
+import org.hca.dto.request.ProfileSaveRequestDto;
 import org.hca.model.ProfileSaveModel;
 import org.hca.entity.Profile;
 import org.mapstruct.Mapper;
@@ -11,5 +12,6 @@ public interface ProfileMapper {
     ProfileMapper INSTANCE= Mappers.getMapper(ProfileMapper.class);
 
     Profile dtoToProfile(ProfileSaveModel dto);
+    Profile dtoToProfile(ProfileSaveRequestDto dto);
 
 }

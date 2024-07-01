@@ -1,5 +1,6 @@
 package org.hca.service;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.json.JsonData;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
+    private final RentalService rentalService;
     private final ElasticsearchTemplate elasticsearchTemplate;
 
     @RabbitListener(queues = "q.car.save")
@@ -59,12 +61,23 @@ public class CarService {
         return carRepository.findAll(pageable);
     }
 
-    public Page<CarResponseDto> filter(int page, int size, String category, String gearType, String fuelType, String minDaily, String maxDaily) {
+    public Page<CarResponseDto> filter(int page, int size, String category, String gearType, String fuelType, String minDaily, String maxDaily, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(page, size);
         BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
-
+        List<String> rentedCars = rentalService.findRentedCars(startDate, endDate);
+        System.out.println("startDate: " + startDate + " endDate: " + endDate);
+        System.out.println("Car ids: " + rentedCars);
+        if(!rentedCars.isEmpty()) {
+            for (String carId : rentedCars) {
+                Query notInQuery = TermQuery.of(t -> t
+                        .field("id")
+                        .value(carId)
+                )._toQuery();
+                boolQueryBuilder.mustNot(notInQuery);
+            }
+        }
         if (category != null) {
-            Query fuzzyQueryCategory = FuzzyQuery.of(m -> m
+            Query fuzzyQueryCategory = TermQuery.of(m -> m
                     .field("category")
                     .value(category)
             )._toQuery();
@@ -72,7 +85,7 @@ public class CarService {
         }
 
         if (gearType != null) {
-            Query fuzzyQueryGearType = FuzzyQuery.of(m -> m
+            Query fuzzyQueryGearType = TermQuery.of(m -> m
                     .field("gearType")
                     .value(gearType)
             )._toQuery();
@@ -80,7 +93,7 @@ public class CarService {
         }
 
         if (fuelType != null) {
-            Query fuzzyQueryFuelType = FuzzyQuery.of(m -> m
+            Query fuzzyQueryFuelType = TermQuery.of(m -> m
                     .field("fuelType")
                     .value(fuelType)
             )._toQuery();
@@ -123,5 +136,7 @@ public class CarService {
     }
 
 
-
+    public CarResponseDto findById(String carId) {
+        return carRepository.findById(carId).orElse(null);
+    }
 }

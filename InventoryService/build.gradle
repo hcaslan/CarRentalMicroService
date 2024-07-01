@@ -5,4 +5,9 @@ dependencies {
     implementation libs.springBootAmqp
     implementation libs.springBootDataRedis
     implementation libs.springBootThymeleaf
+
+    implementation libs.jacksonJsr310
+    implementation libs.jjwtApi
+    runtimeOnly libs.jjwtImpl
+    runtimeOnly libs.jjwtJackson
 }

@@ -58,4 +58,8 @@ public class OfficeService {
     public Office findById(String modelId) {
         return officeRepository.findById(modelId).orElseThrow(()-> new InventoryServiceException(ErrorType.OFFICE_NOT_FOUND));
     }
+
+    public Office findByName(String name) {
+        return officeRepository.findByName(name).orElseThrow(()-> new InventoryServiceException(ErrorType.OFFICE_NOT_FOUND));
+    }
 }

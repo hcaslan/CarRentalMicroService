@@ -23,6 +23,15 @@ public class RabbitMQConfig {
     Queue carOfficeQueue(){
         return new Queue("q.office.save");
     }
+    @Bean(name = "rentalSaveQueue")
+    Queue rentalSaveQueue(){
+        return new Queue("q.rental.save");
+    }
+    @Bean(name = "getProfileIdQueue")
+    Queue getProfileIdQueue(){
+        return new Queue("q.get.profile.id");
+    }
+
     @Bean(name = "carSaveDirectExchange")
     DirectExchange carSaveDirectExchange(){
         return new DirectExchange("exchange.direct.carSave");
@@ -30,6 +39,14 @@ public class RabbitMQConfig {
     @Bean(name = "officeSaveDirectExchange")
     DirectExchange officeSaveDirectExchange(){
         return new DirectExchange("exchange.direct.officeSave");
+    }
+    @Bean(name = "rentalSaveDirectExchange")
+    DirectExchange rentalSaveDirectExchange(){
+        return new DirectExchange("exchange.direct.rentalSave");
+    }
+    @Bean(name = "getProfileIdDirectExchange")
+    DirectExchange getProfileIdDirectExchange(){
+        return new DirectExchange("exchange.direct.getProfileId");
     }
 
     @Bean
@@ -46,6 +63,20 @@ public class RabbitMQConfig {
                 .bind(officeSaveQueue)
                 .to(officeSaveDirectExchange)
                 .with("Routing.OfficeSave");
+    }
+    @Bean
+    Binding bindingRentalSave(@Qualifier("rentalSaveQueue") Queue rentalSaveQueue,@Qualifier("rentalSaveDirectExchange") DirectExchange rentalSaveDirectExchange){
+        return BindingBuilder
+                .bind(rentalSaveQueue)
+                .to(rentalSaveDirectExchange)
+                .with("Routing.RentalSave");
+    }
+    @Bean
+    Binding bindingGetAuthId(@Qualifier("getProfileIdQueue") Queue getProfileIdQueue,@Qualifier("getProfileIdDirectExchange") DirectExchange getProfileIdDirectExchange){
+        return BindingBuilder
+                .bind(getProfileIdQueue)
+                .to(getProfileIdDirectExchange)
+                .with("Routing.GetProfileId");
     }
     @Bean
     MessageConverter messageConverter(){
