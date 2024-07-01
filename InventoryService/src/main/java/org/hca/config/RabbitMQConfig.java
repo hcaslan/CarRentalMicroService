@@ -27,6 +27,10 @@ public class RabbitMQConfig {
     Queue rentalSaveQueue(){
         return new Queue("q.rental.save");
     }
+    @Bean(name = "getProfileIdQueue")
+    Queue getProfileIdQueue(){
+        return new Queue("q.get.profile.id");
+    }
 
     @Bean(name = "carSaveDirectExchange")
     DirectExchange carSaveDirectExchange(){
@@ -39,6 +43,10 @@ public class RabbitMQConfig {
     @Bean(name = "rentalSaveDirectExchange")
     DirectExchange rentalSaveDirectExchange(){
         return new DirectExchange("exchange.direct.rentalSave");
+    }
+    @Bean(name = "getProfileIdDirectExchange")
+    DirectExchange getProfileIdDirectExchange(){
+        return new DirectExchange("exchange.direct.getProfileId");
     }
 
     @Bean
@@ -62,6 +70,13 @@ public class RabbitMQConfig {
                 .bind(rentalSaveQueue)
                 .to(rentalSaveDirectExchange)
                 .with("Routing.RentalSave");
+    }
+    @Bean
+    Binding bindingGetAuthId(@Qualifier("getProfileIdQueue") Queue getProfileIdQueue,@Qualifier("getProfileIdDirectExchange") DirectExchange getProfileIdDirectExchange){
+        return BindingBuilder
+                .bind(getProfileIdQueue)
+                .to(getProfileIdDirectExchange)
+                .with("Routing.GetProfileId");
     }
     @Bean
     MessageConverter messageConverter(){

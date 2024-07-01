@@ -1,5 +1,6 @@
 package org.hca.service;
 
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.json.JsonData;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
+    private final RentalService rentalService;
     private final ElasticsearchTemplate elasticsearchTemplate;
 
     @RabbitListener(queues = "q.car.save")
@@ -62,7 +64,18 @@ public class CarService {
     public Page<CarResponseDto> filter(int page, int size, String category, String gearType, String fuelType, String minDaily, String maxDaily, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(page, size);
         BoolQuery.Builder boolQueryBuilder = new BoolQuery.Builder();
-
+        List<String> rentedCars = rentalService.findRentedCars(startDate, endDate);
+        System.out.println("startDate: " + startDate + " endDate: " + endDate);
+        System.out.println("Car ids: " + rentedCars);
+        if(!rentedCars.isEmpty()) {
+            for (String carId : rentedCars) {
+                Query notInQuery = TermQuery.of(t -> t
+                        .field("id")
+                        .value(carId)
+                )._toQuery();
+                boolQueryBuilder.mustNot(notInQuery);
+            }
+        }
         if (category != null) {
             Query fuzzyQueryCategory = TermQuery.of(m -> m
                     .field("category")
@@ -96,15 +109,6 @@ public class CarService {
             boolQueryBuilder.must(priceRangeQuery);
         }
 
-        if(Helper.isNullOrEmptyOrWhitespace(startDate) && Helper.isNullOrEmptyOrWhitespace(endDate)) {
-            Query dateRangeQuery = RangeQuery.of(r -> r
-                    .field("rentals.startDate")
-                    .gte(JsonData.fromJson(startDate))
-                    .lte(JsonData.fromJson(endDate))
-            )._toQuery();
-            boolQueryBuilder.mustNot(dateRangeQuery);
-        }
-
         Query statusQuery = TermQuery.of(t -> t
                 .field("status")
                 .value(Status.AVAILABLE.name().toLowerCase())
@@ -132,5 +136,7 @@ public class CarService {
     }
 
 
-
+    public CarResponseDto findById(String carId) {
+        return carRepository.findById(carId).orElse(null);
+    }
 }

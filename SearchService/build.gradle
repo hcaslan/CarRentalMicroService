@@ -2,4 +2,5 @@ dependencies {
     implementation libs.springBootAmqp
     implementation libs.springBootDataElastic
     implementation libs.springCloudConfigClient
+    implementation libs.jacksonJsr310
 }

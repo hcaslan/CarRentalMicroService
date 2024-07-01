@@ -1,5 +1,6 @@
 package org.hca.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.hca.dto.request.OfficeSaveRequest;
 import org.hca.dto.request.OfficeUpdateRequest;
@@ -12,6 +13,7 @@ import org.hca.service.RentalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.hca.constant.EndPoints.*;
@@ -19,11 +21,16 @@ import static org.hca.constant.EndPoints.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(ROOT+INVENTORY+RENTAL)
+@CrossOrigin
 public class RentalController {
     private final RentalService rentalService;
-    @PostMapping(SAVE)
-    public ResponseEntity<Rental> save(@RequestBody RentalSaveRequest rentalSaveRequest) {
-        return ResponseEntity.ok(rentalService.save(rentalSaveRequest));
+    @PostMapping("/save")
+    public ResponseEntity<Void> save(@RequestBody RentalSaveRequest rentalSaveRequest) {
+        System.out.println(rentalSaveRequest.startDate());
+        System.out.println(rentalSaveRequest.endDate());
+
+        rentalService.save(rentalSaveRequest);
+        return ResponseEntity.ok().build();
     }
 //    @PutMapping(UPDATE)
 //    public ResponseEntity<Office> update(@RequestBody OfficeUpdateRequest officeUpdateRequest, @RequestParam OfficeType officeType) {

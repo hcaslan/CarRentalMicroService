@@ -1,14 +1,15 @@
 package org.hca.dto.request;
 
+import lombok.Builder;
 import org.hca.entity.Office;
 
 import java.time.LocalDate;
-
+@Builder
 public record RentalSaveRequest(
-        String profileId,
+        String token,
         String carId,
-        LocalDate startDate,
-        LocalDate endDate,
-        Office pickupOffice,
-        Office dropoffOffice) {
+        String startDate,
+        String endDate,
+        String pickupOffice,
+        String dropoffOffice) {
 }

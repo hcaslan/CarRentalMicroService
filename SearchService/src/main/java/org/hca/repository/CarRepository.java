@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CarRepository extends ElasticsearchRepository<CarResponseDto,String> {
     Page<CarResponseDto> findAllByCategory(Category category, Pageable pageable);

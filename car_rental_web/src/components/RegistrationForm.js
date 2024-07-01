@@ -38,7 +38,7 @@ const RegistrationForm = () => {
                     <a href="/welcome">HCA</a>
                 </div>
                 <ul className="nav-list">
-                    <li><a href="/rezervations">Reservation Management</a></li>
+                    <li><a href="/reservations">Reservation Management</a></li>
                     <li><a href="/inventory">Cars</a></li>
                     <li><a href="/locations">Our Offices</a></li>
                 </ul>

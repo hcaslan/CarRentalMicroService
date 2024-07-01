@@ -126,4 +126,9 @@ public class ProfileService {
         save(profile);
         return profile;
     }
+    @RabbitListener(queues = "q.get.profile.id")
+    public String getProfileId(String email) {
+        System.out.println(email);
+        return findByEmail(email).getId();
+    }
 }

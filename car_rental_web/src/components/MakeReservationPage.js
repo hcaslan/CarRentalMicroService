@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Cars.css';
 import './Header.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const MakeReservationPage = () => {
     const [cars, setCars] = useState([]);
@@ -12,25 +13,23 @@ const MakeReservationPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [dayCount, setDayCount] = useState(0);
-    
+
     const query = new URLSearchParams(location.search);
     const pickupOffice = query.get('pickupOffice');
     const dropoffOffice = query.get('dropoffOffice');
     const pickupDate = query.get('pickupDate');
-    const pickupTime = query.get('pickupTime');
+    const pickupTime = query.get('pickupTime') || '12:00';
     const dropoffDate = query.get('dropoffDate');
-    const dropoffTime = query.get('dropoffTime');
+    const dropoffTime = query.get('dropoffTime') || '12:00';
     const car_location = query.get('car_location');
 
     useEffect(() => {
-        // Check if the previous page was the welcome page
         const referrer = document.referrer;
-        const isFromApp= referrer && (referrer.includes('/welcome') || referrer.includes('/inventory'));
+        const isFromApp = referrer && (referrer.includes('/welcome') || referrer.includes('/inventory'));
         if (!isFromApp) {
             navigate('/welcome');
         }
     }, [navigate]);
-
 
     useEffect(() => {
         if (pickupDate && dropoffDate) {
@@ -42,7 +41,6 @@ const MakeReservationPage = () => {
         }
     }, [pickupDate, dropoffDate]);
 
-    // State for filters
     const [category, setCategory] = useState(null);
     const [gearType, setGearType] = useState(null);
     const [fuelType, setFuelType] = useState(null);
@@ -51,7 +49,7 @@ const MakeReservationPage = () => {
 
     const fetchCars = useCallback(() => {
         axios.get('http://localhost:3004/api/v1/search/cars/filter', {
-            params: { page, size, category, gearType, fuelType, minDaily, maxDaily }
+            params: { page, size, category, gearType, fuelType, minDaily, maxDaily, startDate: pickupDate + ' 00:00', endDate: dropoffDate + ' 00:00' }
         })
             .then(response => {
                 console.log('API response:', response.data);
@@ -96,19 +94,48 @@ const MakeReservationPage = () => {
             dropoffTime,
             car_location
         };
-        
-        // Redirect to the reservation confirmation page
-        navigate(`/payment-information?${new URLSearchParams(reservationData).toString()}`);
+
+        const token = localStorage.getItem('token');
+        console.log('Token from localStorage:', token);
+
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                console.log('Decoded token:', decodedToken);
+
+                const currentTime = Date.now() / 1000; // Convert to seconds
+                console.log('Current time (in seconds):', currentTime);
+
+                if (decodedToken.exp > currentTime) {
+                    console.log('Token is valid, navigating to payment information...');
+                    navigate(`/payment-information?${new URLSearchParams(reservationData).toString()}`);
+                } else {
+                    console.log('Token is expired, removing token from localStorage and redirecting to login...');
+                    localStorage.removeItem('token');
+                    localStorage.setItem('reservationData', JSON.stringify(reservationData));
+                    navigate(`/login?returnUrl=/payment-information&message=Your session has expired, please log in again.`);
+                }
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                localStorage.removeItem('token');
+                localStorage.setItem('reservationData', JSON.stringify(reservationData));
+                navigate(`/login?returnUrl=/payment-information&message=An error occurred, please log in again.`);
+            }
+        } else {
+            console.log('No token found, saving reservation data and redirecting to login...');
+            localStorage.setItem('reservationData', JSON.stringify(reservationData));
+            navigate(`/login?returnUrl=/payment-information&message=Please log in to complete your reservation.`);
+        }
     };
+
     const handlePastStep = () => {
         navigate(`/welcome`);
     };
-    const handleCurrentStep = () => {
 
-    };
-    const handleNextStep = () => {
+    const handleCurrentStep = () => {};
 
-    };
+    const handleNextStep = () => {};
+
     return (
         <div className="car-list-page">
             <header className="header">
@@ -210,8 +237,7 @@ const MakeReservationPage = () => {
                                     <p><strong>Fuel Type:</strong> {car.fuelType}</p>
                                     <p><strong>Seats:</strong> {car.seats}</p>
                                     <p><strong>Daily Price:</strong> ${car.dailyPrice}</p>
-                                    <p className="total-price"><strong>Total
-                                        Price:</strong> ${(car.dailyPrice * dayCount).toFixed(2)}</p>
+                                    <p className="total-price"><strong>Total Price:</strong> ${(car.dailyPrice * dayCount).toFixed(2)}</p>
                                 </div>
                                 <button onClick={() => handleRentNow(car.id)}>Select</button>
                             </div>
@@ -229,11 +255,8 @@ const MakeReservationPage = () => {
                             max={totalPages}
                         />
                     </label>
-                    <button onClick={() => setPage(prev => Math.max(prev - 1, 0))} disabled={page === 0}>Previous
-                    </button>
-                    <button onClick={() => setPage(prev => (prev < totalPages - 1 ? prev + 1 : prev))}
-                            disabled={page >= totalPages - 1}>Next
-                    </button>
+                    <button onClick={() => setPage(prev => Math.max(prev - 1, 0))} disabled={page === 0}>Previous</button>
+                    <button onClick={() => setPage(prev => (prev < totalPages - 1 ? prev + 1 : prev))} disabled={page >= totalPages - 1}>Next</button>
                 </div>
             </main>
         </div>

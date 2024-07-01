@@ -44,6 +44,11 @@ public class CarController {
         return ResponseEntity.ok(carService.fuzzyFindByName(name));
     }
 
+    @GetMapping("/findById/{carId}")
+    public ResponseEntity<CarResponseDto> findById(@PathVariable String carId) {
+        return ResponseEntity.ok(carService.findById(carId));
+    }
+
     @GetMapping("/rangeByPrice")
     public ResponseEntity<List<CarResponseDto>> rangeByPrice(@RequestParam Double minPrice, @RequestParam Double maxPrice) {
         return ResponseEntity.ok(carService.rangeByPrice(minPrice, maxPrice));

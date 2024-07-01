@@ -1,5 +1,7 @@
 package org.hca.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hca.util.LocalDateTimeToLongConverter;
 import org.hca.util.LongToLocalDateTimeConverter;
 import org.springframework.context.annotation.Bean;
@@ -17,4 +19,11 @@ public class ElasticsearchConfig {
                 new LocalDateTimeToLongConverter()
         ));
     }
+
+//    @Bean
+//    public ObjectMapper objectMapper() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        mapper.registerModule(new JavaTimeModule());
+//        return mapper;
+//    }
 }

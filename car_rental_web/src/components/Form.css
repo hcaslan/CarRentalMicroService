@@ -19,6 +19,7 @@ body, html {
     flex: 1;
     position: relative;
     text-align: center;
+    padding-top: 100px;
 }
 
 .content {

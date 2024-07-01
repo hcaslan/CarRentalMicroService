@@ -31,7 +31,7 @@ public class LoginController {
     private final JwtUtil jwtUtil;
     private final AppUserService appUserService;
     @PostMapping(LOGIN)
-    public ResponseEntity<String> login(@RequestBody AuthenticationRequest loginRequest, HttpSession session, Principal principal) {
+    public ResponseEntity<String> login(@RequestBody AuthenticationRequest loginRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
         } catch (AuthenticationException e) {

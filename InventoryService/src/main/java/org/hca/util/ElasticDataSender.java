@@ -37,7 +37,7 @@ public class ElasticDataSender {
 			rabbitTemplate.convertAndSend("exchange.direct.officeSave", "Routing.OfficeSave", office);
 		});
 	}
-	@PostConstruct
+	//@PostConstruct
 	public void sendRentals(){
 		List<Rental> inventoryOutput = rentalService.findAll();
 		inventoryOutput.forEach(rental ->{

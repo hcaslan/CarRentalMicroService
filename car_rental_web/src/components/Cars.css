@@ -28,7 +28,7 @@ body, html {
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
-    width: calc(20% - 20px); /* Adjust width to fit 5 cards in a row */
+    width: calc(20% - 20px); /* to fit 5 cards in a row */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
@@ -76,7 +76,7 @@ body, html {
     background-color: #cc0000;
 }
 .reservation-info {
-    margin-top: 20px;
+    margin-top: 60px;
     border: 1px solid #ccc;
     padding: 50px;
     background-color: #f9f9f9;
